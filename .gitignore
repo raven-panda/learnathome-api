@@ -5,5 +5,4 @@ riderModule.iml
 /_ReSharper.Caches/
 .vs/
 .idea/
-*.db-shm
-*.db-wal
+*.db*
