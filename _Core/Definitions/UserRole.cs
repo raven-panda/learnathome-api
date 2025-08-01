@@ -3,5 +3,5 @@
 public enum UserRole
 {
     Student,
-    Mentor,
+    Mentor
 }

@@ -4,13 +4,7 @@ namespace LearnAtHomeApi._Core.Exceptions;
 
 public static class RpProblemDetailsFactory
 {
-    public static async Task WriteProblemDetails(
-        HttpContext context,
-        int statusCode,
-        string title,
-        string detail,
-        string type = "about:blank"
-    )
+    public static async Task WriteProblemDetails(HttpContext context, int statusCode, string title, string detail, string type = "about:blank")
     {
         var problem = new
         {
@@ -18,7 +12,7 @@ public static class RpProblemDetailsFactory
             title,
             status = statusCode,
             detail,
-            instance = context.Request.Path,
+            instance = context.Request.Path
         };
 
         context.Response.StatusCode = statusCode;
