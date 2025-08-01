@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+app.UsePathBase("/api/v1");
 
 using (var scope = app.Services.CreateScope())
 {
