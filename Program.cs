@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=database.db"));
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRpUserService, RpUserService>();
+
 builder.Services.AddScoped<IStudentTaskRepository, StudentTaskRepositoryImp>();
 builder.Services.AddScoped<IStudentTaskService, StudentTaskService>();
 
