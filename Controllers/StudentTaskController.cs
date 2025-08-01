@@ -1,11 +1,14 @@
 ﻿using LearnAtHomeApi.Dto;
 using LearnAtHomeApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearnAtHomeApi.Controllers;
 
 [Route("student-tasks")]
 [ApiController]
+[Authorize]
 public class StudentTaskController(IStudentTaskService service) : ControllerBase
 {
     [HttpGet("user/{userId:int}")]
