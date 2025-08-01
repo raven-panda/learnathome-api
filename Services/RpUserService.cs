@@ -4,10 +4,7 @@ using LearnAtHomeApi.Repository;
 
 namespace LearnAtHomeApi.Services;
 
-public interface IRpUserService : IService<UserDto, RpUserModel>
-{
-    
-}
+public interface IRpUserService : IService<UserDto, RpUserModel> { }
 
 public class RpUserService(IUserRepository repo) : IRpUserService
 {
@@ -41,7 +38,7 @@ public class RpUserService(IUserRepository repo) : IRpUserService
             Email = model.Email,
             Password = model.Password,
             CreatedAt = model.CreatedAt,
-            UpdatedAt = model.UpdatedAt
+            UpdatedAt = model.UpdatedAt,
         };
     }
 
@@ -57,7 +54,7 @@ public class RpUserService(IUserRepository repo) : IRpUserService
             Email = dto.Email,
             Password = dto.Password,
             CreatedAt = dto.CreatedAt,
-            UpdatedAt = dto.UpdatedAt
+            UpdatedAt = dto.UpdatedAt,
         };
     }
 }
