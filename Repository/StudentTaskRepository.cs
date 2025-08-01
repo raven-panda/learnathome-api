@@ -1,4 +1,5 @@
-﻿using LearnAtHomeApi.Models;
+﻿using LearnAtHomeApi._Core.Exceptions.Entity;
+using LearnAtHomeApi.Models;
 
 namespace LearnAtHomeApi.Repository;
 
@@ -23,7 +24,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
     {
         var item = context.StudentTasks.Find(id);
         if (item == null)
-            throw new InvalidOperationException($"Entity with id {id} not found");
+            throw new EntityNotFoundException("Task", id);
             
         return item;
     }
@@ -50,7 +51,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
     {
         var entity = context.StudentTasks.Find(id);
         if (entity == null)
-            throw new InvalidOperationException($"Entity with id {id} not found");
+            throw new EntityNotFoundException("Task", id);
 
         context.StudentTasks.Remove(entity);
         context.SaveChanges();
@@ -61,7 +62,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
     {
         var existing = context.StudentTasks.Find(item.Id);
         if (existing == null)
-            throw new InvalidOperationException();
+            throw new EntityNotFoundException("Task", item.Id);
         
         item.CreatedAt = existing.CreatedAt;
         item.UpdatedAt = DateTime.Now;

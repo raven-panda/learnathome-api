@@ -1,4 +1,5 @@
 using LearnAtHomeApi;
+using LearnAtHomeApi._Core.Middleware;
 using LearnAtHomeApi.Repository;
 using LearnAtHomeApi.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 app.UsePathBase("/api/v1");
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
