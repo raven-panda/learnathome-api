@@ -1,5 +1,6 @@
 using LearnAtHomeApi;
 using LearnAtHomeApi.Repository;
+using LearnAtHomeApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=database.db"));
 
 builder.Services.AddScoped<IStudentTaskRepository, StudentTaskRepositoryImp>();
+builder.Services.AddScoped<IStudentTaskService, StudentTaskService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
