@@ -7,10 +7,6 @@ namespace LearnAtHomeApi.Services;
 public interface IStudentTaskService : IService<StudentTaskDto, StudentTaskModel>
 {
     IEnumerable<StudentTaskDto> GetAllByUserId(int id);
-    StudentTaskDto Get(int id);
-    StudentTaskDto Add(StudentTaskDto item);
-    int Remove(int id);
-    StudentTaskDto Update(StudentTaskDto item);
 }
 
 public class StudentTaskService(IStudentTaskRepository repo) : IStudentTaskService

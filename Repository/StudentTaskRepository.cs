@@ -3,14 +3,9 @@ using LearnAtHomeApi.Models;
 
 namespace LearnAtHomeApi.Repository;
 
-public interface IStudentTaskRepository
+public interface IStudentTaskRepository : IRepositoryBase<StudentTaskModel>
 {
     IEnumerable<StudentTaskModel> GetAllByUserId(int id);
-    StudentTaskModel Get(int id);
-    bool Exists(int id);
-    StudentTaskModel Add(StudentTaskModel item);
-    int Remove(int id);
-    StudentTaskModel Update(StudentTaskModel item);
 }
 
 public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskRepository
