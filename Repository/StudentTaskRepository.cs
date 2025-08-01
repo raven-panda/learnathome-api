@@ -15,16 +15,12 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
         return context.StudentTasks.Where(p => p.AttributedUserId == id);
     }
 
-    public StudentTaskModel Get(int id)
+    public StudentTaskModel? Get(int? id)
     {
-        var item = context.StudentTasks.Find(id);
-        if (item == null)
-            throw new EntityNotFoundException("Task", id);
-
-        return item;
+        return context.StudentTasks.Find(id);
     }
 
-    public bool Exists(int id)
+    public bool Exists(int? id)
     {
         return context.StudentTasks.Any(item => item.Id == id);
     }
@@ -44,9 +40,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
 
     public int Remove(int id)
     {
-        var entity = context.StudentTasks.Find(id);
-        if (entity == null)
-            throw new EntityNotFoundException("Task", id);
+        var entity = context.StudentTasks.Find(id)!;
 
         context.StudentTasks.Remove(entity);
         context.SaveChanges();
@@ -55,9 +49,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
 
     public StudentTaskModel Update(StudentTaskModel item)
     {
-        var existing = context.StudentTasks.Find(item.Id);
-        if (existing == null)
-            throw new EntityNotFoundException("Task", item.Id);
+        var existing = context.StudentTasks.Find(item.Id)!;
 
         item.CreatedAt = existing.CreatedAt;
         item.UpdatedAt = DateTime.Now;

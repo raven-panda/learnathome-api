@@ -1,4 +1,5 @@
-﻿using LearnAtHomeApi._Core.Exceptions;
+﻿using System.Net;
+using LearnAtHomeApi._Core.Exceptions;
 using LearnAtHomeApi._Core.Exceptions.Entity;
 
 namespace LearnAtHomeApi._Core.Middleware;
@@ -41,12 +42,17 @@ public class ExceptionHandlingMiddleware(
         return ex switch
         {
             EntityNotFoundException => (
-                404,
+                (int)HttpStatusCode.NotFound,
                 "Entity Not Found",
                 $"{_baseUrl}/docs/errors/entity-not-found.html"
             ),
+            EntityUniqueConstraintViolationException => (
+                (int)HttpStatusCode.NotFound,
+                "Entity Unique Constraint Violation",
+                $"{_baseUrl}/docs/errors/entity-unique-constraint-violation.html"
+            ),
             _ => (
-                500,
+                (int)HttpStatusCode.InternalServerError,
                 "Internal Server Error",
                 "https://tools.ietf.org/html/rfc9110#section-15.6.1"
             ),

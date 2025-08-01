@@ -1,4 +1,5 @@
-﻿using LearnAtHomeApi.Dto;
+﻿using LearnAtHomeApi._Core.Exceptions.Entity;
+using LearnAtHomeApi.Dto;
 using LearnAtHomeApi.Models;
 using LearnAtHomeApi.Repository;
 
@@ -18,7 +19,11 @@ public class StudentTaskService(IStudentTaskRepository repo) : IStudentTaskServi
 
     public StudentTaskDto Get(int id)
     {
-        return ToDto(repo.Get(id));
+        var item = repo.Get(id);
+        if (item == null)
+            throw new EntityNotFoundException("Task", id);
+
+        return ToDto(item);
     }
 
     public StudentTaskDto Add(StudentTaskDto item)
@@ -28,11 +33,17 @@ public class StudentTaskService(IStudentTaskRepository repo) : IStudentTaskServi
 
     public int Remove(int id)
     {
+        if (!repo.Exists(id))
+            throw new EntityNotFoundException("Task", id);
+
         return repo.Remove(id);
     }
 
     public StudentTaskDto Update(StudentTaskDto item)
     {
+        if (!repo.Exists(item.Id))
+            throw new EntityNotFoundException("Task", item.Id);
+
         return ToDto(repo.Update(ToModel(item)));
     }
 
@@ -54,19 +65,23 @@ public class StudentTaskService(IStudentTaskRepository repo) : IStudentTaskServi
 
     public StudentTaskModel ToModel(StudentTaskDto dto)
     {
-        if (dto.Id != null && repo.Exists(dto.Id.Value))
-            return repo.Get(dto.Id.Value);
+        if (dto.Id == null)
+            return new StudentTaskModel
+            {
+                AttributedUserId = dto.AttributedUserId,
+                Name = dto.Name,
+                Description = dto.Description,
+                CreatedAt = dto.CreatedAt,
+                CreatedByUserId = dto.CreatedByUserId,
+                UpdatedAt = dto.UpdatedAt,
+                UpdatedByUserId = dto.UpdatedByUserId,
+                EndDate = dto.EndDate,
+            };
 
-        return new StudentTaskModel
-        {
-            AttributedUserId = dto.AttributedUserId,
-            Name = dto.Name,
-            Description = dto.Description,
-            CreatedAt = dto.CreatedAt,
-            CreatedByUserId = dto.CreatedByUserId,
-            UpdatedAt = dto.UpdatedAt,
-            UpdatedByUserId = dto.UpdatedByUserId,
-            EndDate = dto.EndDate,
-        };
+        var item = repo.Get(dto.Id);
+        if (item == null)
+            throw new EntityNotFoundException("Task", dto.Id);
+
+        return item;
     }
 }

@@ -1,4 +1,5 @@
-﻿using LearnAtHomeApi.Dto;
+﻿using LearnAtHomeApi._Core.Exceptions.Entity;
+using LearnAtHomeApi.Dto;
 using LearnAtHomeApi.Models;
 using LearnAtHomeApi.Repository;
 
@@ -10,21 +11,36 @@ public class RpUserService(IUserRepository repo) : IRpUserService
 {
     public UserDto Get(int id)
     {
-        return ToDto(repo.Get(id));
+        var item = repo.Get(id);
+        if (item == null)
+            throw new EntityNotFoundException("User", id);
+
+        return ToDto(item);
     }
 
     public UserDto Add(UserDto item)
     {
+        if (repo.ExistsByEmail(item.Email))
+            throw new EntityUniqueConstraintViolationException("User", "Email");
+
         return ToDto(repo.Add(ToModel(item)));
     }
 
     public int Remove(int id)
     {
+        if (!repo.Exists(id))
+            throw new EntityNotFoundException("User", id);
+
         return repo.Remove(id);
     }
 
     public UserDto Update(UserDto item)
     {
+        if (!repo.Exists(item.Id))
+            throw new EntityNotFoundException("User", item.Id);
+        if (repo.ExistsByEmail(item.Email))
+            throw new EntityUniqueConstraintViolationException("User", "Email");
+
         return ToDto(repo.Update(ToModel(item)));
     }
 
@@ -44,17 +60,21 @@ public class RpUserService(IUserRepository repo) : IRpUserService
 
     public RpUserModel ToModel(UserDto dto)
     {
-        if (dto.Id != null && repo.Exists(dto.Id.Value))
-            return repo.Get(dto.Id.Value);
+        if (dto.Id == null)
+            return new RpUserModel
+            {
+                Role = dto.Role,
+                Username = dto.Username,
+                Email = dto.Email,
+                Password = dto.Password,
+                CreatedAt = dto.CreatedAt,
+                UpdatedAt = dto.UpdatedAt,
+            };
 
-        return new RpUserModel
-        {
-            Role = dto.Role,
-            Username = dto.Username,
-            Email = dto.Email,
-            Password = dto.Password,
-            CreatedAt = dto.CreatedAt,
-            UpdatedAt = dto.UpdatedAt,
-        };
+        var item = repo.Get(dto.Id);
+        if (item == null)
+            throw new EntityNotFoundException("User", dto.Id);
+
+        return item;
     }
 }

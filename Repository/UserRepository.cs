@@ -3,22 +3,26 @@ using LearnAtHomeApi.Models;
 
 namespace LearnAtHomeApi.Repository;
 
-public interface IUserRepository : IRepositoryBase<RpUserModel> { }
+public interface IUserRepository : IRepositoryBase<RpUserModel>
+{
+    bool ExistsByEmail(string email);
+}
 
 public class UserRepository(AppDbContext context) : IUserRepository
 {
-    public RpUserModel Get(int id)
+    public RpUserModel? Get(int? id)
     {
-        var item = context.Users.Find(id);
-        if (item == null)
-            throw new EntityNotFoundException("User", id);
-
-        return item;
+        return context.Users.Find(id);
     }
 
-    public bool Exists(int id)
+    public bool Exists(int? id)
     {
         return context.Users.Any(item => item.Id == id);
+    }
+
+    public bool ExistsByEmail(string email)
+    {
+        return context.Users.Any(item => item.Email == email);
     }
 
     public RpUserModel Add(RpUserModel item)
@@ -33,10 +37,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public int Remove(int id)
     {
-        var entity = context.Users.Find(id);
-        if (entity == null)
-            throw new EntityNotFoundException("User", id);
-
+        var entity = context.Users.Find(id)!;
         context.Users.Remove(entity);
         context.SaveChanges();
         return entity.Id;
@@ -44,9 +45,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public RpUserModel Update(RpUserModel item)
     {
-        var existing = context.Users.Find(item.Id);
-        if (existing == null)
-            throw new EntityNotFoundException("User", item.Id);
+        var existing = context.Users.Find(item.Id)!;
 
         item.CreatedAt = existing.CreatedAt;
         item.UpdatedAt = DateTime.Now;
