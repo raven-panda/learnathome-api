@@ -3,10 +3,17 @@ using LearnAtHomeApi._Core.Exceptions.Entity;
 
 namespace LearnAtHomeApi._Core.Middleware;
 
-public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger, IWebHostEnvironment env, IConfiguration config)
+public class ExceptionHandlingMiddleware(
+    RequestDelegate next,
+    ILogger<ExceptionHandlingMiddleware> logger,
+    IWebHostEnvironment env,
+    IConfiguration config
+)
 {
-    private readonly string _baseUrl = env.IsDevelopment() ? config["ASPNETCORE_URLS"]?.Split(';')[0] ?? "http://localhost:5146" : "https://learnathome.io";
-    
+    private readonly string _baseUrl = env.IsDevelopment()
+        ? config["ASPNETCORE_URLS"]?.Split(';')[0] ?? "http://localhost:5146"
+        : "https://learnathome.io";
+
     public async Task Invoke(HttpContext context)
     {
         try
@@ -33,8 +40,16 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
     {
         return ex switch
         {
-            EntityNotFoundException => (404, "Entity Not Found", $"{_baseUrl}/docs/errors/entity-not-found.html"),
-            _ => (500, "Internal Server Error", "https://tools.ietf.org/html/rfc9110#section-15.6.1")
+            EntityNotFoundException => (
+                404,
+                "Entity Not Found",
+                $"{_baseUrl}/docs/errors/entity-not-found.html"
+            ),
+            _ => (
+                500,
+                "Internal Server Error",
+                "https://tools.ietf.org/html/rfc9110#section-15.6.1"
+            ),
         };
     }
 }

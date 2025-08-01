@@ -17,21 +17,21 @@ public class StudentTaskController(IStudentTaskService service) : ControllerBase
         var tasks = service.GetAllByUserId(userId);
         return Ok(tasks);
     }
-    
+
     [HttpGet("{taskId:int}")]
     public IActionResult Get(int taskId)
     {
         var tasks = service.Get(taskId);
         return Ok(tasks);
     }
-    
+
     [HttpPost]
     public IActionResult Create(StudentTaskDto task)
     {
         var createdTask = service.Add(task);
         return Ok(createdTask);
     }
-    
+
     [HttpPatch("{taskId:int}")]
     public IActionResult Update(int taskId, StudentTaskDto task)
     {
@@ -39,7 +39,7 @@ public class StudentTaskController(IStudentTaskService service) : ControllerBase
         var updated = service.Update(task);
         return Ok(updated);
     }
-    
+
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {

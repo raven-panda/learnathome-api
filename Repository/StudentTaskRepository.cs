@@ -20,7 +20,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
         var item = context.StudentTasks.Find(id);
         if (item == null)
             throw new EntityNotFoundException("Task", id);
-            
+
         return item;
     }
 
@@ -36,7 +36,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
         // TODO : add auth to implement this
         item.CreatedByUserId = 0;
         item.UpdatedByUserId = 0;
-        
+
         context.StudentTasks.Add(item);
         context.SaveChanges();
         return item;
@@ -58,7 +58,7 @@ public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskReposi
         var existing = context.StudentTasks.Find(item.Id);
         if (existing == null)
             throw new EntityNotFoundException("Task", item.Id);
-        
+
         item.CreatedAt = existing.CreatedAt;
         item.UpdatedAt = DateTime.Now;
         // TODO : add auth to implement this
