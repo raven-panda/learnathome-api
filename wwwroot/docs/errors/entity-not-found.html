@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Learn@Home API - Entity Not Found</title>
+    <style>
+        body {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1024px;
+            font-size: 1.2rem;
+            font-family: Arial, sans-serif;
+        }
+        
+        body > h1 {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .warning {
+            color: orangered;
+            padding: 8px;
+            border: solid 1px orangered;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .warning > h3 {
+            margin: 0;
+        }
+
+        code {
+            background-color: #eee;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            border: solid 1px darkgray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Entity Not Found Exception</h1>
+    <h2>Status Code : 404</h2>
+    <p>This exception occurs when <strong>the given ID does not match any existing record</strong> in the database.</p>
+    <div class="warning">
+        <h3>Make sure the ID you're requesting exists and is valid.</h3>
+    </div>
+
+    <h3>Example:</h3>
+    <pre><code>GET /api/student-tasks/99999</code></pre>
+
+    <footer>
+        &copy; 2025 Learn@Home API
+    </footer>
+</body>
+</html>
