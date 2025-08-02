@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LearnAtHomeApi.Models;
+namespace LearnAtHomeApi.StudentTask.Model;
 
 public class StudentTaskModel
 {

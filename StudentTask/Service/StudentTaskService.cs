@@ -1,9 +1,10 @@
 ﻿using LearnAtHomeApi._Core.Exceptions.Entity;
-using LearnAtHomeApi.Dto;
-using LearnAtHomeApi.Models;
-using LearnAtHomeApi.Repository;
+using LearnAtHomeApi._Core.Service;
+using LearnAtHomeApi.StudentTask.Dto;
+using LearnAtHomeApi.StudentTask.Model;
+using LearnAtHomeApi.StudentTask.Repository;
 
-namespace LearnAtHomeApi.Services;
+namespace LearnAtHomeApi.StudentTask.Service;
 
 public interface IStudentTaskService : IService<StudentTaskDto, StudentTaskModel>
 {

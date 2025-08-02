@@ -1,7 +1,10 @@
 using LearnAtHomeApi;
 using LearnAtHomeApi._Core.Middleware;
-using LearnAtHomeApi.Repository;
-using LearnAtHomeApi.Services;
+using LearnAtHomeApi.Authentication.Service;
+using LearnAtHomeApi.StudentTask.Repository;
+using LearnAtHomeApi.StudentTask.Service;
+using LearnAtHomeApi.User.Repository;
+using LearnAtHomeApi.User.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

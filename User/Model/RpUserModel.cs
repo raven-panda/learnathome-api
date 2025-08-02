@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using LearnAtHomeApi._Core.Definitions;
 
-namespace LearnAtHomeApi.Models;
+namespace LearnAtHomeApi.User.Model;
 
 public class RpUserModel
 {

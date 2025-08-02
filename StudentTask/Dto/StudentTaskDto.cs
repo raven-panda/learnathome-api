@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LearnAtHomeApi.Dto;
+namespace LearnAtHomeApi.StudentTask.Dto;
 
 public class StudentTaskDto
 {

@@ -1,4 +1,5 @@
-﻿using LearnAtHomeApi.Models;
+﻿using LearnAtHomeApi.StudentTask.Model;
+using LearnAtHomeApi.User.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnAtHomeApi;

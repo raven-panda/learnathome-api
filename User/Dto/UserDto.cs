@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using LearnAtHomeApi._Core.Definitions;
 
-namespace LearnAtHomeApi.Dto;
+namespace LearnAtHomeApi.User.Dto;
 
 public class UserDto
 {

@@ -1,7 +1,7 @@
-﻿using LearnAtHomeApi._Core.Exceptions.Entity;
-using LearnAtHomeApi.Models;
+﻿using LearnAtHomeApi._Core.Repository;
+using LearnAtHomeApi.User.Model;
 
-namespace LearnAtHomeApi.Repository;
+namespace LearnAtHomeApi.User.Repository;
 
 public interface IUserRepository : IRepositoryBase<RpUserModel>
 {

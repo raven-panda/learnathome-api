@@ -1,4 +1,4 @@
-﻿namespace LearnAtHomeApi.Services;
+﻿namespace LearnAtHomeApi._Core.Service;
 
 public interface IService<TDto, TModel>
 {

@@ -1,10 +1,9 @@
-﻿using LearnAtHomeApi.Dto;
-using LearnAtHomeApi.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using LearnAtHomeApi.StudentTask.Dto;
+using LearnAtHomeApi.StudentTask.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LearnAtHomeApi.Controllers;
+namespace LearnAtHomeApi.StudentTask.Controller;
 
 [Route("student-tasks")]
 [ApiController]

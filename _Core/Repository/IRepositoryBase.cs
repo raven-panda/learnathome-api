@@ -1,4 +1,4 @@
-﻿namespace LearnAtHomeApi.Repository;
+﻿namespace LearnAtHomeApi._Core.Repository;
 
 public interface IRepositoryBase<TModel>
 {

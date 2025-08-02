@@ -1,8 +1,8 @@
-﻿using LearnAtHomeApi.Dto;
-using LearnAtHomeApi.Services;
+﻿using LearnAtHomeApi.Authentication.Dto;
+using LearnAtHomeApi.Authentication.Service;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LearnAtHomeApi.Controllers;
+namespace LearnAtHomeApi.Authentication.Controller;
 
 [Route("auth")]
 [ApiController]

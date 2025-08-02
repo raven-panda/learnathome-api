@@ -1,7 +1,7 @@
-﻿using LearnAtHomeApi._Core.Exceptions.Entity;
-using LearnAtHomeApi.Models;
+﻿using LearnAtHomeApi._Core.Repository;
+using LearnAtHomeApi.StudentTask.Model;
 
-namespace LearnAtHomeApi.Repository;
+namespace LearnAtHomeApi.StudentTask.Repository;
 
 public interface IStudentTaskRepository : IRepositoryBase<StudentTaskModel>
 {

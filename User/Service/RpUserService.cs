@@ -1,9 +1,10 @@
 ﻿using LearnAtHomeApi._Core.Exceptions.Entity;
-using LearnAtHomeApi.Dto;
-using LearnAtHomeApi.Models;
-using LearnAtHomeApi.Repository;
+using LearnAtHomeApi._Core.Service;
+using LearnAtHomeApi.User.Dto;
+using LearnAtHomeApi.User.Model;
+using LearnAtHomeApi.User.Repository;
 
-namespace LearnAtHomeApi.Services;
+namespace LearnAtHomeApi.User.Service;
 
 public interface IRpUserService : IService<UserDto, RpUserModel> { }
 

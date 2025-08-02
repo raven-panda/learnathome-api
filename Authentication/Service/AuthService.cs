@@ -1,8 +1,10 @@
 ﻿using LearnAtHomeApi._Core.Definitions;
 using LearnAtHomeApi._Core.Exceptions.Entity;
-using LearnAtHomeApi.Dto;
+using LearnAtHomeApi.Authentication.Dto;
+using LearnAtHomeApi.User.Dto;
+using LearnAtHomeApi.User.Service;
 
-namespace LearnAtHomeApi.Services;
+namespace LearnAtHomeApi.Authentication.Service;
 
 public interface IAuthService
 {
