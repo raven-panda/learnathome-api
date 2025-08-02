@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using LearnAtHomeApi._Core.Exceptions;
 using LearnAtHomeApi._Core.Exceptions.Entity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LearnAtHomeApi._Core.Middleware;
 
@@ -55,6 +56,11 @@ public class ExceptionHandlingMiddleware(
                 (int)HttpStatusCode.BadRequest,
                 "Passwords Not Matching",
                 $"{_baseUrl}/docs/errors/passwords-not-matching.html"
+            ),
+            SecurityTokenException => (
+                (int)HttpStatusCode.Unauthorized,
+                "Security Token Invalid",
+                $"{_baseUrl}/docs/errors/security-token-invalid.html"
             ),
             _ => (
                 (int)HttpStatusCode.InternalServerError,

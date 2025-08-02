@@ -1,20 +1,33 @@
-﻿using LearnAtHomeApi._Core.Exceptions.Entity;
+﻿using System.Text;
+using LearnAtHomeApi._Core.Exceptions.Entity;
 using LearnAtHomeApi.Authentication.Dto;
 using LearnAtHomeApi.User.Dto;
 using LearnAtHomeApi.User.Service;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LearnAtHomeApi.Authentication.Service;
 
 public interface IAuthService
 {
-    string Register(AuthRegisterDto dto, out DateTime tokenExpiration);
-    string Login(AuthLoginDto dto, out DateTime tokenExpiration);
+    (string refreshToken, string accessToken) Register(
+        AuthRegisterDto dto,
+        out DateTime tokenExpiration
+    );
+    (string refreshToken, string accessToken) Login(AuthLoginDto dto, out DateTime tokenExpiration);
+    string RefreshAccessToken(string? refreshToken);
 }
 
-internal sealed class AuthService(IRpUserService service, TokenProvider tokenProvider)
-    : IAuthService
+internal sealed class AuthService(
+    IRpUserService service,
+    TokenProvider tokenProvider,
+    IConfiguration configuration
+) : IAuthService
 {
-    public string Register(AuthRegisterDto dto, out DateTime tokenExpiration)
+    public (string refreshToken, string accessToken) Register(
+        AuthRegisterDto dto,
+        out DateTime tokenExpiration
+    )
     {
         if (dto.Password != dto.PasswordConfirm)
             throw new PasswordsNotMatchingException();
@@ -29,15 +42,30 @@ internal sealed class AuthService(IRpUserService service, TokenProvider tokenPro
             }
         );
 
-        var token = tokenProvider.Generate(user, out tokenExpiration);
-        return token;
+        var refreshToken = tokenProvider.GenerateRefreshToken(user, out tokenExpiration);
+        var accessToken = tokenProvider.GenerateAccessToken(user, out tokenExpiration);
+        return (refreshToken, accessToken);
     }
 
-    public string Login(AuthLoginDto dto, out DateTime tokenExpiration)
+    public (string refreshToken, string accessToken) Login(
+        AuthLoginDto dto,
+        out DateTime refreshTokenExpiration
+    )
     {
         var user = service.GetByEmail(dto.Email);
 
-        var token = tokenProvider.Generate(user, out tokenExpiration);
-        return token;
+        var refreshToken = tokenProvider.GenerateRefreshToken(user, out refreshTokenExpiration);
+        var accessToken = tokenProvider.GenerateAccessToken(user, out _);
+        return (refreshToken, accessToken);
+    }
+
+    public string RefreshAccessToken(string? refreshToken)
+    {
+        if (refreshToken == null)
+            throw new SecurityTokenException("Invalid token");
+
+        var parsedUserId = tokenProvider.ParseUserId(refreshToken);
+        var user = service.Get(parsedUserId);
+        return tokenProvider.GenerateAccessToken(user, out _);
     }
 }

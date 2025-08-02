@@ -8,7 +8,17 @@ namespace LearnAtHomeApi.Authentication;
 
 internal sealed class TokenProvider(IConfiguration configuration)
 {
-    public string Generate(UserDto user, out DateTime expiration)
+    public string GenerateAccessToken(UserDto user, out DateTime expiration)
+    {
+        return GenerateToken(user, out expiration, "Jwt:ExpirationInMinutes");
+    }
+
+    public string GenerateRefreshToken(UserDto user, out DateTime expiration)
+    {
+        return GenerateToken(user, out expiration, "Jwt:RefreshExpirationInDays");
+    }
+
+    private string GenerateToken(UserDto user, out DateTime expiration, string expirationConfigKey)
     {
         if (user.Id == null)
             throw new ArgumentNullException(nameof(user.Id));
@@ -20,7 +30,7 @@ internal sealed class TokenProvider(IConfiguration configuration)
         var tokenDescriptor = GenerateTokenDescriptor(credentials, user);
         expiration =
             tokenDescriptor.Expires
-            ?? DateTime.UtcNow.AddMinutes(configuration.GetValue<int>("Jwt:ExpirationInMinutes"));
+            ?? DateTime.UtcNow.AddMinutes(configuration.GetValue<int>(expirationConfigKey));
         var handler = new JsonWebTokenHandler();
 
         return handler.CreateToken(tokenDescriptor);
@@ -37,6 +47,7 @@ internal sealed class TokenProvider(IConfiguration configuration)
                 [
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id!.Value.ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()),
                 ]
             ),
             Expires = DateTime.UtcNow.AddMinutes(
@@ -46,5 +57,38 @@ internal sealed class TokenProvider(IConfiguration configuration)
             Issuer = configuration["Jwt:Issuer"],
             Audience = configuration["Jwt:Audience"],
         };
+    }
+
+    public int ParseUserId(string token)
+    {
+        var handler = new JsonWebTokenHandler();
+        var validationResult = handler
+            .ValidateTokenAsync(
+                token,
+                new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)
+                    ),
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["Jwt:Audience"],
+                    ClockSkew = TimeSpan.Zero,
+                    ValidateLifetime = true, // Vérifie si le token est expiré
+                }
+            )
+            .Result;
+
+        if (!validationResult.IsValid)
+            throw new SecurityTokenException("Invalid token");
+
+        var claims = validationResult.Claims;
+        var userId = claims[JwtRegisteredClaimNames.Sub]?.ToString();
+        if (userId == null)
+            throw new SecurityTokenException("Invalid user ID");
+
+        return int.Parse(userId);
     }
 }

@@ -9,13 +9,14 @@ namespace LearnAtHomeApi.Authentication.Controller;
 
 [Route("auth")]
 [ApiController]
-public class AuthController(IAuthService service) : ControllerBase
+public class AuthController(IAuthService service, IConfiguration configuration) : ControllerBase
 {
     [HttpPost("register")]
     public IActionResult RegisterUser(AuthRegisterDto dto)
     {
-        var token = service.Register(dto, out var tokenExpiration);
-        CreateCookie(token, tokenExpiration);
+        var (refreshToken, accessToken) = service.Register(dto, out var tokenExpiration);
+        CreateRefreshTokenCookie(refreshToken, tokenExpiration);
+        CreateSessionTokenCookie(accessToken);
 
         return Ok();
     }
@@ -23,22 +24,56 @@ public class AuthController(IAuthService service) : ControllerBase
     [HttpPost("login")]
     public IActionResult LoginUser(AuthLoginDto dto)
     {
-        var token = service.Login(dto, out var tokenExpiration);
-        CreateCookie(token, tokenExpiration);
+        var (refreshToken, accessToken) = service.Login(dto, out var refreshTokenExpiration);
+        CreateRefreshTokenCookie(refreshToken, refreshTokenExpiration);
+        CreateSessionTokenCookie(accessToken);
 
         return Ok();
     }
 
-    private void CreateCookie(string token, DateTime tokenExpiration)
+    [HttpGet("refresh")]
+    public IActionResult RefreshUserToken()
+    {
+        var refreshToken = Request.Cookies[configuration["Jwt:RefreshTokenCookieName"]!];
+        var accessToken = service.RefreshAccessToken(refreshToken);
+        CreateSessionTokenCookie(accessToken);
+        return Ok();
+    }
+
+    [HttpGet("logout")]
+    public IActionResult LogoutUser()
+    {
+        Response.Cookies.Delete(configuration["Jwt:RefreshTokenCookieName"]!);
+        Response.Cookies.Delete(configuration["Jwt:SessionTokenCookieName"]!);
+        return Ok();
+    }
+
+    private void CreateRefreshTokenCookie(string token, DateTime tokenExpiration)
     {
         Response.Cookies.Append(
-            "access_token",
+            configuration["Jwt:RefreshTokenCookieName"]!,
             token,
             new CookieOptions
             {
                 HttpOnly = true,
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.None,
                 Expires = tokenExpiration,
+                Secure = true,
+                Path = "/",
+            }
+        );
+    }
+
+    private void CreateSessionTokenCookie(string token)
+    {
+        Response.Cookies.Append(
+            configuration["Jwt:SessionTokenCookieName"]!,
+            token,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true,
                 Path = "/",
             }
         );

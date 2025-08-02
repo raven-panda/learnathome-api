@@ -1,3 +1,4 @@
+using System.Text;
 using LearnAtHomeApi;
 using LearnAtHomeApi._Core.Middleware;
 using LearnAtHomeApi.Authentication;
@@ -9,6 +10,9 @@ using LearnAtHomeApi.User.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
+const string corsPolicyName = "AllowOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,16 +37,53 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: corsPolicyName,
+        policy =>
+        {
+            policy
+                .WithOrigins("https://localhost:*", "http://localhost:*")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
+    );
+});
+
 builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(
-        JwtBearerDefaults.AuthenticationScheme,
-        options => builder.Configuration.Bind("JwtSettings", options)
-    )
-    .AddCookie(
-        CookieAuthenticationDefaults.AuthenticationScheme,
-        options => builder.Configuration.Bind("CookieSettings", options)
-    );
+    .AddJwtBearer(o =>
+    {
+        o.RequireHttpsMetadata = false;
+        o.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = ctx =>
+            {
+                if (
+                    ctx.Request.Cookies.ContainsKey(
+                        builder.Configuration["Jwt:SessionTokenCookieName"]!
+                    )
+                )
+                    ctx.Token = ctx.Request.Cookies[
+                        builder.Configuration["Jwt:SessionTokenCookieName"]!
+                    ];
+
+                return Task.CompletedTask;
+            },
+        };
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)
+            ),
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ClockSkew = TimeSpan.Zero,
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.UsePathBase("/api/v1");
@@ -69,7 +110,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseCors(corsPolicyName);
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
