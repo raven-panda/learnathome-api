@@ -1,5 +1,6 @@
 using LearnAtHomeApi;
 using LearnAtHomeApi._Core.Middleware;
+using LearnAtHomeApi.Authentication;
 using LearnAtHomeApi.Authentication.Service;
 using LearnAtHomeApi.StudentTask.Repository;
 using LearnAtHomeApi.StudentTask.Service;
@@ -23,6 +24,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<IStudentTaskRepository, StudentTaskRepositoryImp>();
 builder.Services.AddScoped<IStudentTaskService, StudentTaskService>();
+
+builder.Services.AddSingleton<TokenProvider>();
 
 builder.Services.AddControllers();
 

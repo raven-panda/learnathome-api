@@ -8,17 +8,18 @@ namespace LearnAtHomeApi.Authentication.Service;
 
 public interface IAuthService
 {
-    void Register(AuthRegisterDto dto);
+    string Register(AuthRegisterDto dto, out DateTime tokenExpiration);
 }
 
-public class AuthService(IRpUserService service) : IAuthService
+internal sealed class AuthService(IRpUserService service, TokenProvider tokenProvider)
+    : IAuthService
 {
-    public void Register(AuthRegisterDto dto)
+    public string Register(AuthRegisterDto dto, out DateTime tokenExpiration)
     {
         if (dto.Password != dto.PasswordConfirm)
             throw new PasswordsNotMatchingException();
 
-        service.Add(
+        var user = service.Add(
             new UserDto()
             {
                 Email = dto.Email,
@@ -27,5 +28,8 @@ public class AuthService(IRpUserService service) : IAuthService
                 Role = UserRole.Mentor,
             }
         );
+
+        var token = tokenProvider.Generate(user, out tokenExpiration);
+        return token;
     }
 }
