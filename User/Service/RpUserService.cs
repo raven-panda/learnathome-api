@@ -11,7 +11,7 @@ public interface IRpUserService : IService<UserDto, RpUserModel>
     public UserDto GetByEmail(string email);
 }
 
-public class RpUserService(IUserRepository repo) : IRpUserService
+internal sealed class RpUserService(IUserRepository repo) : IRpUserService
 {
     public UserDto Get(int id)
     {

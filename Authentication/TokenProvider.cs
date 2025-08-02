@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LearnAtHomeApi.Authentication;
 
-public sealed class TokenProvider(IConfiguration configuration)
+internal sealed class TokenProvider(IConfiguration configuration)
 {
     public string Generate(UserDto user, out DateTime expiration)
     {

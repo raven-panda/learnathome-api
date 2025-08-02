@@ -8,7 +8,7 @@ public interface IStudentTaskRepository : IRepositoryBase<StudentTaskModel>
     IEnumerable<StudentTaskModel> GetAllByUserId(int id);
 }
 
-public class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskRepository
+internal sealed class StudentTaskRepositoryImp(AppDbContext context) : IStudentTaskRepository
 {
     public IEnumerable<StudentTaskModel> GetAllByUserId(int id)
     {

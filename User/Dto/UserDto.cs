@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using LearnAtHomeApi._Core.Definitions;
 
 namespace LearnAtHomeApi.User.Dto;
 

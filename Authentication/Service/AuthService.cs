@@ -1,5 +1,4 @@
-﻿using LearnAtHomeApi._Core.Definitions;
-using LearnAtHomeApi._Core.Exceptions.Entity;
+﻿using LearnAtHomeApi._Core.Exceptions.Entity;
 using LearnAtHomeApi.Authentication.Dto;
 using LearnAtHomeApi.User.Dto;
 using LearnAtHomeApi.User.Service;

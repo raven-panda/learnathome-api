@@ -10,7 +10,7 @@ public interface IUserRepository : IRepositoryBase<RpUserModel>
     RpUserModel? GetByEmail(string email);
 }
 
-public class UserRepository(AppDbContext context) : IUserRepository
+internal sealed class UserRepository(AppDbContext context) : IUserRepository
 {
     public RpUserModel? Get(int? id)
     {

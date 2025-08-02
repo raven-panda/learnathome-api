@@ -1,4 +1,4 @@
-﻿namespace LearnAtHomeApi._Core.Definitions;
+﻿namespace LearnAtHomeApi.User.Dto;
 
 public enum UserRole
 {

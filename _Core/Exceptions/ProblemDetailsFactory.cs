@@ -2,7 +2,7 @@
 
 namespace LearnAtHomeApi._Core.Exceptions;
 
-public static class RpProblemDetailsFactory
+internal static class RpProblemDetailsFactory
 {
     public static async Task WriteProblemDetails(
         HttpContext context,

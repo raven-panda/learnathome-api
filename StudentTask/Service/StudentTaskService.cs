@@ -11,7 +11,7 @@ public interface IStudentTaskService : IService<StudentTaskDto, StudentTaskModel
     IEnumerable<StudentTaskDto> GetAllByUserId(int id);
 }
 
-public class StudentTaskService(IStudentTaskRepository repo) : IStudentTaskService
+internal sealed class StudentTaskService(IStudentTaskRepository repo) : IStudentTaskService
 {
     public IEnumerable<StudentTaskDto> GetAllByUserId(int id)
     {

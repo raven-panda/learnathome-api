@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LearnAtHomeApi._Core.Definitions;
+using LearnAtHomeApi.User.Dto;
 
 namespace LearnAtHomeApi.User.Model;
 
