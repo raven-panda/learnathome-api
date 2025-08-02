@@ -6,12 +6,12 @@ namespace LearnAtHomeApi.Controllers;
 
 [Route("auth")]
 [ApiController]
-public class AuthController(IRpUserService service) : ControllerBase
+public class AuthController(IAuthService service) : ControllerBase
 {
     [HttpPost("register")]
-    public IActionResult RegisterUser(UserDto userDto)
+    public IActionResult RegisterUser(AuthRegisterDto dto)
     {
-        var createdUser = service.Add(userDto);
-        return Ok(createdUser);
+        service.Register(dto);
+        return Ok();
     }
 }

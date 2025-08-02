@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRpUserService, RpUserService>();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<IStudentTaskRepository, StudentTaskRepositoryImp>();
 builder.Services.AddScoped<IStudentTaskService, StudentTaskService>();
 

@@ -51,6 +51,11 @@ public class ExceptionHandlingMiddleware(
                 "Entity Unique Constraint Violation",
                 $"{_baseUrl}/docs/errors/entity-unique-constraint-violation.html"
             ),
+            PasswordsNotMatchingException => (
+                (int)HttpStatusCode.BadRequest,
+                "Passwords Not Matching",
+                $"{_baseUrl}/docs/errors/passwords-not-matching.html"
+            ),
             _ => (
                 (int)HttpStatusCode.InternalServerError,
                 "Internal Server Error",
