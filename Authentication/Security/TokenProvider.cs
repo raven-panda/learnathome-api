@@ -4,7 +4,7 @@ using LearnAtHomeApi.User.Dto;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace LearnAtHomeApi.Authentication;
+namespace LearnAtHomeApi.Authentication.Security;
 
 internal sealed class TokenProvider(IConfiguration configuration)
 {
@@ -82,12 +82,12 @@ internal sealed class TokenProvider(IConfiguration configuration)
             .Result;
 
         if (!validationResult.IsValid)
-            throw new SecurityTokenException("Invalid token");
+            throw new SecurityTokenException();
 
         var claims = validationResult.Claims;
         var userId = claims[JwtRegisteredClaimNames.Sub]?.ToString();
         if (userId == null)
-            throw new SecurityTokenException("Invalid user ID");
+            throw new SecurityTokenException();
 
         return int.Parse(userId);
     }

@@ -1,4 +1,4 @@
-﻿using LearnAtHomeApi._Core.Exceptions.Entity;
+﻿using LearnAtHomeApi._Core.Exceptions;
 using LearnAtHomeApi._Core.Service;
 using LearnAtHomeApi.User.Dto;
 using LearnAtHomeApi.User.Model;
@@ -8,7 +8,7 @@ namespace LearnAtHomeApi.User.Service;
 
 public interface IRpUserService : IService<UserDto, RpUserModel>
 {
-    public UserDto GetByEmail(string email);
+    public UserDto? TryGetByEmail(string email);
 }
 
 internal sealed class RpUserService(IUserRepository repo) : IRpUserService
@@ -22,13 +22,11 @@ internal sealed class RpUserService(IUserRepository repo) : IRpUserService
         return ToDto(item);
     }
 
-    public UserDto GetByEmail(string email)
+    public UserDto? TryGetByEmail(string email)
     {
         var item = repo.GetByEmail(email);
-        if (item == null)
-            throw new EntityNotFoundException("User", "email", email);
 
-        return ToDto(item);
+        return item != null ? ToDto(item) : null;
     }
 
     public UserDto Add(UserDto item)

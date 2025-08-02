@@ -1,6 +1,7 @@
 ﻿using System.Text;
-using LearnAtHomeApi._Core.Exceptions.Entity;
+using LearnAtHomeApi._Core.Exceptions;
 using LearnAtHomeApi.Authentication.Dto;
+using LearnAtHomeApi.Authentication.Security;
 using LearnAtHomeApi.User.Dto;
 using LearnAtHomeApi.User.Service;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -21,6 +22,7 @@ public interface IAuthService
 internal sealed class AuthService(
     IRpUserService service,
     TokenProvider tokenProvider,
+    IPasswordHasher passwordHasher,
     IConfiguration configuration
 ) : IAuthService
 {
@@ -33,10 +35,10 @@ internal sealed class AuthService(
             throw new PasswordsNotMatchingException();
 
         var user = service.Add(
-            new UserDto()
+            new UserDto
             {
                 Email = dto.Email,
-                Password = dto.Password,
+                Password = passwordHasher.Hash(dto.Password),
                 Username = dto.Username,
                 Role = UserRole.Mentor,
             }
@@ -52,7 +54,9 @@ internal sealed class AuthService(
         out DateTime refreshTokenExpiration
     )
     {
-        var user = service.GetByEmail(dto.Email);
+        var user = service.TryGetByEmail(dto.Email);
+        if (user is null || !passwordHasher.VerifyHashedPassword(user.Password, dto.Password))
+            throw new InvalidCredentialsException();
 
         var refreshToken = tokenProvider.GenerateRefreshToken(user, out refreshTokenExpiration);
         var accessToken = tokenProvider.GenerateAccessToken(user, out _);
@@ -62,7 +66,7 @@ internal sealed class AuthService(
     public string RefreshAccessToken(string? refreshToken)
     {
         if (refreshToken == null)
-            throw new SecurityTokenException("Invalid token");
+            throw new SecurityTokenException();
 
         var parsedUserId = tokenProvider.ParseUserId(refreshToken);
         var user = service.Get(parsedUserId);

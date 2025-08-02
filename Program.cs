@@ -2,6 +2,7 @@ using System.Text;
 using LearnAtHomeApi;
 using LearnAtHomeApi._Core.Middleware;
 using LearnAtHomeApi.Authentication;
+using LearnAtHomeApi.Authentication.Security;
 using LearnAtHomeApi.Authentication.Service;
 using LearnAtHomeApi.StudentTask.Repository;
 using LearnAtHomeApi.StudentTask.Service;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRpUserService, RpUserService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddScoped<IStudentTaskRepository, StudentTaskRepositoryImp>();
 builder.Services.AddScoped<IStudentTaskService, StudentTaskService>();

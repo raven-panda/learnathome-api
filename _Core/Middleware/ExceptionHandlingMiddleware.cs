@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using LearnAtHomeApi._Core.Exceptions;
-using LearnAtHomeApi._Core.Exceptions.Entity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LearnAtHomeApi._Core.Middleware;
@@ -48,7 +47,7 @@ public class ExceptionHandlingMiddleware(
                 $"{_baseUrl}/docs/errors/entity-not-found.html"
             ),
             EntityUniqueConstraintViolationException => (
-                (int)HttpStatusCode.NotFound,
+                (int)HttpStatusCode.Conflict,
                 "Entity Unique Constraint Violation",
                 $"{_baseUrl}/docs/errors/entity-unique-constraint-violation.html"
             ),
@@ -61,6 +60,16 @@ public class ExceptionHandlingMiddleware(
                 (int)HttpStatusCode.Unauthorized,
                 "Security Token Invalid",
                 $"{_baseUrl}/docs/errors/security-token-invalid.html"
+            ),
+            InvalidCredentialsException => (
+                (int)HttpStatusCode.BadRequest,
+                "Invalid Credentials",
+                $"{_baseUrl}/docs/errors/invalid-credentials.html"
+            ),
+            NotImplementedException => (
+                (int)HttpStatusCode.NotImplemented,
+                "Not Implemented",
+                "https://tools.ietf.org/html/rfc9110#section-15.6.2"
             ),
             _ => (
                 (int)HttpStatusCode.InternalServerError,

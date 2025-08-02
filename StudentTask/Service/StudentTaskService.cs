@@ -1,4 +1,4 @@
-﻿using LearnAtHomeApi._Core.Exceptions.Entity;
+﻿using LearnAtHomeApi._Core.Exceptions;
 using LearnAtHomeApi._Core.Service;
 using LearnAtHomeApi.StudentTask.Dto;
 using LearnAtHomeApi.StudentTask.Model;

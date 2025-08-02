@@ -1,4 +1,4 @@
-﻿namespace LearnAtHomeApi._Core.Exceptions.Entity;
+﻿namespace LearnAtHomeApi._Core.Exceptions;
 
 public sealed class EntityNotFoundException : ApplicationException
 {
