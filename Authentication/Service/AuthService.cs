@@ -9,6 +9,7 @@ namespace LearnAtHomeApi.Authentication.Service;
 public interface IAuthService
 {
     string Register(AuthRegisterDto dto, out DateTime tokenExpiration);
+    string Login(AuthLoginDto dto, out DateTime tokenExpiration);
 }
 
 internal sealed class AuthService(IRpUserService service, TokenProvider tokenProvider)
@@ -28,6 +29,14 @@ internal sealed class AuthService(IRpUserService service, TokenProvider tokenPro
                 Role = UserRole.Mentor,
             }
         );
+
+        var token = tokenProvider.Generate(user, out tokenExpiration);
+        return token;
+    }
+
+    public string Login(AuthLoginDto dto, out DateTime tokenExpiration)
+    {
+        var user = service.GetByEmail(dto.Email);
 
         var token = tokenProvider.Generate(user, out tokenExpiration);
         return token;

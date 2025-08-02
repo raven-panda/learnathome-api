@@ -15,6 +15,22 @@ public class AuthController(IAuthService service) : ControllerBase
     public IActionResult RegisterUser(AuthRegisterDto dto)
     {
         var token = service.Register(dto, out var tokenExpiration);
+        CreateCookie(token, tokenExpiration);
+
+        return Ok();
+    }
+
+    [HttpPost("login")]
+    public IActionResult LoginUser(AuthLoginDto dto)
+    {
+        var token = service.Login(dto, out var tokenExpiration);
+        CreateCookie(token, tokenExpiration);
+
+        return Ok();
+    }
+
+    private void CreateCookie(string token, DateTime tokenExpiration)
+    {
         Response.Cookies.Append(
             "access_token",
             token,
@@ -26,7 +42,5 @@ public class AuthController(IAuthService service) : ControllerBase
                 Path = "/",
             }
         );
-
-        return Ok();
     }
 }

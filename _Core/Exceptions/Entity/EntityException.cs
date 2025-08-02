@@ -1,7 +1,13 @@
 ﻿namespace LearnAtHomeApi._Core.Exceptions.Entity;
 
-public class EntityNotFoundException(string entityName, object? id)
-    : ApplicationException($"{entityName} with id {id} not found");
+public class EntityNotFoundException : ApplicationException
+{
+    public EntityNotFoundException(string entityName, object? id)
+        : base($"{entityName} with id {id} not found") { }
+
+    public EntityNotFoundException(string entityName, string fieldName, object? id)
+        : base($"{entityName} with {fieldName} {id} not found") { }
+};
 
 public class EntityUniqueConstraintViolationException(string entityName, string fieldName)
     : ApplicationException(

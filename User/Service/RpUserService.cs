@@ -6,7 +6,10 @@ using LearnAtHomeApi.User.Repository;
 
 namespace LearnAtHomeApi.User.Service;
 
-public interface IRpUserService : IService<UserDto, RpUserModel> { }
+public interface IRpUserService : IService<UserDto, RpUserModel>
+{
+    public UserDto GetByEmail(string email);
+}
 
 public class RpUserService(IUserRepository repo) : IRpUserService
 {
@@ -15,6 +18,15 @@ public class RpUserService(IUserRepository repo) : IRpUserService
         var item = repo.Get(id);
         if (item == null)
             throw new EntityNotFoundException("User", id);
+
+        return ToDto(item);
+    }
+
+    public UserDto GetByEmail(string email)
+    {
+        var item = repo.GetByEmail(email);
+        if (item == null)
+            throw new EntityNotFoundException("User", "email", email);
 
         return ToDto(item);
     }

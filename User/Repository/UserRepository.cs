@@ -1,4 +1,5 @@
 ﻿using LearnAtHomeApi._Core.Repository;
+using LearnAtHomeApi.User.Dto;
 using LearnAtHomeApi.User.Model;
 
 namespace LearnAtHomeApi.User.Repository;
@@ -6,6 +7,7 @@ namespace LearnAtHomeApi.User.Repository;
 public interface IUserRepository : IRepositoryBase<RpUserModel>
 {
     bool ExistsByEmail(string email);
+    RpUserModel? GetByEmail(string email);
 }
 
 public class UserRepository(AppDbContext context) : IUserRepository
@@ -13,6 +15,11 @@ public class UserRepository(AppDbContext context) : IUserRepository
     public RpUserModel? Get(int? id)
     {
         return context.Users.Find(id);
+    }
+
+    public RpUserModel? GetByEmail(string email)
+    {
+        return context.Users.FirstOrDefault(user => user.Email == email);
     }
 
     public bool Exists(int? id)
