@@ -11,6 +11,7 @@ public class IntegrationTestAbstract(LearnAtHomeWebApplicationFactory factory)
     public async Task InitializeAsync()
     {
         await Task.Delay(50);
+        await BeforeEachTest();
     }
 
     public Task DisposeAsync()
@@ -18,6 +19,11 @@ public class IntegrationTestAbstract(LearnAtHomeWebApplicationFactory factory)
         using var scope = factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         db.Database.EnsureDeleted();
+        return Task.CompletedTask;
+    }
+
+    protected virtual Task BeforeEachTest()
+    {
         return Task.CompletedTask;
     }
 }
