@@ -5,13 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnAtHomeApi.FunctionalTests.Auth;
 
-public class AuthLoginIntegrationTests
+public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
     : IClassFixture<LearnAtHomeWebApplicationFactory>,
         IDisposable
 {
-    private readonly CookieContainer _cookieContainer = new();
-    private readonly HttpClient _client;
-    private readonly LearnAtHomeWebApplicationFactory _factory;
+    private readonly HttpClient _client = factory.CreateClient();
+
     private readonly AuthRegisterDto _registerDto = new()
     {
         Email = "test@test.com",
@@ -19,13 +18,6 @@ public class AuthLoginIntegrationTests
         Password = "Password70*$",
         PasswordConfirm = "Password70*$",
     };
-
-    public AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
-    {
-        _factory = factory;
-
-        _client = factory.CreateClient();
-    }
 
     private async Task BeforeEachTest()
     {
@@ -103,7 +95,7 @@ public class AuthLoginIntegrationTests
 
     public void Dispose()
     {
-        using var scope = _factory.Services.CreateScope();
+        using var scope = factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         db.Database.EnsureDeleted();
     }
