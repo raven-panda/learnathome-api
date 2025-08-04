@@ -4,6 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+[assembly: TestCollectionOrderer(
+    ordererTypeName: "LearnAtHomeApi.FunctionalTests.DisplayNameOrderer",
+    ordererAssemblyName: "LearnAtHomeApi.FunctionalTests"
+)]
+
 namespace LearnAtHomeApi.FunctionalTests;
 
 public class LearnAtHomeWebApplicationFactory : WebApplicationFactory<Program>, IDisposable
@@ -17,6 +23,7 @@ public class LearnAtHomeWebApplicationFactory : WebApplicationFactory<Program>, 
             var descriptor = services.SingleOrDefault(d =>
                 d.ServiceType == typeof(DbContextOptions<AppDbContext>)
             );
+
             if (descriptor != null)
                 services.Remove(descriptor);
 

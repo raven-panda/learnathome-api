@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <RootNamespace>LearnAtHomeApi.FunctionalTests</RootNamespace>
+    <AssemblyName>LearnAtHomeApi.FunctionalTests</AssemblyName>
     <UserSecretsId>43317958-0f7b-4e4f-9a6d-27f9bf2c4bcc</UserSecretsId>
   </PropertyGroup>
 
