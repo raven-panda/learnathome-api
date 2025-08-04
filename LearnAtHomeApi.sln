@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnAtHomeApi", "LearnAtHomeApi\LearnAtHomeApi.csproj", "{FA14F60C-92C6-48DF-8793-EF6D5C0F3C6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnAtHomeApi.IntegrationTests", "LearnAtHomeApi.IntegrationTests\LearnAtHomeApi.IntegrationTests.csproj", "{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,18 @@ Global
 		{FA14F60C-92C6-48DF-8793-EF6D5C0F3C6F}.Release|x64.Build.0 = Release|Any CPU
 		{FA14F60C-92C6-48DF-8793-EF6D5C0F3C6F}.Release|x86.ActiveCfg = Release|Any CPU
 		{FA14F60C-92C6-48DF-8793-EF6D5C0F3C6F}.Release|x86.Build.0 = Release|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Debug|x64.Build.0 = Debug|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Debug|x86.Build.0 = Debug|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Release|x64.ActiveCfg = Release|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Release|x64.Build.0 = Release|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Release|x86.ActiveCfg = Release|Any CPU
+		{03F420A5-CAAA-4376-B80B-B4D5E70D2FDC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
