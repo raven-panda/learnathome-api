@@ -3,6 +3,7 @@ using System;
 using LearnAtHomeApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LearnAtHomeApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250803082732_AddUserRelationsToStudentTask")]
+    partial class AddUserRelationsToStudentTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
@@ -40,9 +43,6 @@ namespace LearnAtHomeApi.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MentorId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -57,8 +57,6 @@ namespace LearnAtHomeApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("MentorId");
 
                     b.HasIndex("UpdatedById");
 
@@ -78,9 +76,6 @@ namespace LearnAtHomeApi.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("MentorId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -103,8 +98,6 @@ namespace LearnAtHomeApi.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("MentorId");
-
                     b.ToTable("Users");
                 });
 
@@ -116,12 +109,6 @@ namespace LearnAtHomeApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LearnAtHomeApi.User.Model.RpUserModel", "Mentor")
-                        .WithMany()
-                        .HasForeignKey("MentorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LearnAtHomeApi.User.Model.RpUserModel", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
@@ -130,18 +117,7 @@ namespace LearnAtHomeApi.Migrations
 
                     b.Navigation("CreatedBy");
 
-                    b.Navigation("Mentor");
-
                     b.Navigation("UpdatedBy");
-                });
-
-            modelBuilder.Entity("LearnAtHomeApi.User.Model.RpUserModel", b =>
-                {
-                    b.HasOne("LearnAtHomeApi.User.Model.RpUserModel", "Mentor")
-                        .WithMany()
-                        .HasForeignKey("MentorId");
-
-                    b.Navigation("Mentor");
                 });
 #pragma warning restore 612, 618
         }

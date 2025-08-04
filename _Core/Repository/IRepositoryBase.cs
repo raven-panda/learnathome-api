@@ -8,3 +8,12 @@ public interface IRepositoryBase<TModel>
     int Remove(int id);
     TModel Update(TModel item);
 }
+
+public interface IAuditableRepositoryBase<TModel>
+{
+    TModel? Get(int? id);
+    bool Exists(int? id);
+    TModel Add(TModel item, int createdById);
+    int Remove(int id);
+    TModel Update(TModel item, int updatedById);
+}

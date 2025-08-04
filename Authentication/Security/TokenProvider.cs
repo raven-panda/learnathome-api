@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LearnAtHomeApi.Authentication.Security;
 
-internal sealed class TokenProvider(IConfiguration configuration)
+public sealed class TokenProvider(IConfiguration configuration)
 {
     public string GenerateAccessToken(UserDto user, out DateTime expiration)
     {
@@ -90,5 +90,42 @@ internal sealed class TokenProvider(IConfiguration configuration)
             throw new SecurityTokenException();
 
         return int.Parse(userId);
+    }
+
+    public (int id, string email, UserRole role) ParseUserToken(string token)
+    {
+        var handler = new JsonWebTokenHandler();
+        var validationResult = handler
+            .ValidateTokenAsync(
+                token,
+                new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)
+                    ),
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["Jwt:Audience"],
+                    ClockSkew = TimeSpan.Zero,
+                    ValidateLifetime = true, // Vérifie si le token est expiré
+                }
+            )
+            .Result;
+
+        if (!validationResult.IsValid)
+            throw new SecurityTokenException();
+
+        var claims = validationResult.Claims;
+        var userId = claims[JwtRegisteredClaimNames.Sub]?.ToString();
+        var email = claims[JwtRegisteredClaimNames.Email]?.ToString();
+        var role = claims[ClaimTypes.Role]?.ToString();
+        var isRoleValid = Enum.TryParse(role, out UserRole parsedRole);
+
+        if (userId == null || email == null || role == null || !isRoleValid)
+            throw new SecurityTokenException();
+
+        return (int.Parse(userId), email, role: parsedRole);
     }
 }

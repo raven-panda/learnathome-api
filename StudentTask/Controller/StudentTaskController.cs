@@ -1,19 +1,32 @@
-﻿using LearnAtHomeApi.StudentTask.Dto;
+﻿using LearnAtHomeApi.Authentication.Security;
+using LearnAtHomeApi.StudentTask.Dto;
 using LearnAtHomeApi.StudentTask.Service;
+using LearnAtHomeApi.User.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 
 namespace LearnAtHomeApi.StudentTask.Controller;
 
 [Route("student-tasks")]
 [ApiController]
 [Authorize]
-public class StudentTaskController(IStudentTaskService service) : ControllerBase
+public class StudentTaskController(
+    IStudentTaskService service,
+    TokenProvider tokenProvider,
+    IConfiguration configuration
+) : ControllerBase
 {
-    [HttpGet("user/{userId:int}")]
-    public IActionResult GetAllByUserId(int userId)
+    [HttpGet]
+    public IActionResult GetAllByIdMentor()
     {
-        var tasks = service.GetAllByUserId(userId);
+        var (userId, _, role) = tokenProvider.ParseUserToken(
+            Request.Cookies[configuration["Jwt:RefreshTokenCookieName"]!]!
+        );
+        var tasks =
+            role == UserRole.Mentor
+                ? service.GetAllByMentorId(userId)
+                : service.GetAllByAttributedStudentId(userId);
         return Ok(tasks);
     }
 
@@ -25,17 +38,23 @@ public class StudentTaskController(IStudentTaskService service) : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create(StudentTaskDto task)
+    public IActionResult Create(CreateStudentTaskDto task)
     {
-        var createdTask = service.Add(task);
+        var userId = tokenProvider.ParseUserId(
+            Request.Cookies[configuration["Jwt:RefreshTokenCookieName"]!]!
+        );
+        var createdTask = service.Add(task, userId);
         return Ok(createdTask);
     }
 
     [HttpPatch("{taskId:int}")]
-    public IActionResult Update(int taskId, StudentTaskDto task)
+    public IActionResult Update(int taskId, UpdateStudentTaskDto task)
     {
         task.Id = taskId;
-        var updated = service.Update(task);
+        var userId = tokenProvider.ParseUserId(
+            Request.Cookies[configuration["Jwt:RefreshTokenCookieName"]!]!
+        );
+        var updated = service.Update(task, userId);
         return Ok(updated);
     }
 

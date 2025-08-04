@@ -52,13 +52,6 @@ internal sealed class UserRepository(AppDbContext context) : IUserRepository
 
     public RpUserModel Update(RpUserModel item)
     {
-        var existing = context.Users.Find(item.Id)!;
-
-        item.CreatedAt = existing.CreatedAt;
-        item.UpdatedAt = DateTime.Now;
-
-        context.Users.Update(item);
-        context.SaveChanges();
-        return item;
+        throw new AccessViolationException("Cannot update user");
     }
 }

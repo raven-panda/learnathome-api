@@ -21,6 +21,8 @@ public class UserDto
     [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\da-zA-Z]).{12,}$")]
     public string Password { get; set; } = string.Empty;
 
+    public int? MentorId { get; set; } = null;
+
     [Required]
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

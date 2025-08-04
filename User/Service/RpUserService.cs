@@ -31,6 +31,14 @@ internal sealed class RpUserService(IUserRepository repo) : IRpUserService
 
     public UserDto Add(UserDto item)
     {
+        if (item.Role == UserRole.Mentor && item.MentorId != null)
+            throw new BadHttpRequestException(
+                "User with role Mentor cannot have a mentor himself."
+            );
+        if (item.Role == UserRole.Student && item.MentorId == null)
+            throw new BadHttpRequestException(
+                "User with role Mentor cannot have a mentor himself."
+            );
         if (repo.ExistsByEmail(item.Email))
             throw new EntityUniqueConstraintViolationException("User", "Email");
 
@@ -47,12 +55,7 @@ internal sealed class RpUserService(IUserRepository repo) : IRpUserService
 
     public UserDto Update(UserDto item)
     {
-        if (!repo.Exists(item.Id))
-            throw new EntityNotFoundException("User", item.Id);
-        if (repo.ExistsByEmail(item.Email))
-            throw new EntityUniqueConstraintViolationException("User", "Email");
-
-        return ToDto(repo.Update(ToModel(item)));
+        throw new AccessViolationException("Cannot update user");
     }
 
     public UserDto ToDto(RpUserModel model)
@@ -66,26 +69,21 @@ internal sealed class RpUserService(IUserRepository repo) : IRpUserService
             Password = model.Password,
             CreatedAt = model.CreatedAt,
             UpdatedAt = model.UpdatedAt,
+            MentorId = model.Mentor?.Id,
         };
     }
 
     public RpUserModel ToModel(UserDto dto)
     {
-        if (dto.Id == null)
-            return new RpUserModel
-            {
-                Role = dto.Role,
-                Username = dto.Username,
-                Email = dto.Email,
-                Password = dto.Password,
-                CreatedAt = dto.CreatedAt,
-                UpdatedAt = dto.UpdatedAt,
-            };
-
-        var item = repo.Get(dto.Id);
-        if (item == null)
-            throw new EntityNotFoundException("User", dto.Id);
-
-        return item;
+        return new RpUserModel
+        {
+            Role = dto.Role,
+            Username = dto.Username,
+            Email = dto.Email,
+            Password = dto.Password,
+            CreatedAt = dto.CreatedAt,
+            UpdatedAt = dto.UpdatedAt,
+            Mentor = dto.MentorId != null ? repo.Get(dto.MentorId) : null,
+        };
     }
 }

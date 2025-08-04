@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 using LearnAtHomeApi.User.Dto;
 
 namespace LearnAtHomeApi.User.Model;
@@ -19,6 +21,8 @@ public class RpUserModel
 
     [Required, StringLength(255)]
     public string Password { get; set; } = string.Empty;
+
+    public RpUserModel? Mentor { get; set; }
 
     [Required]
     public DateTime CreatedAt { get; set; }
