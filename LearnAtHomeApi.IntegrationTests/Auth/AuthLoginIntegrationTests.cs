@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnAtHomeApi.FunctionalTests.Auth;
 
+[Collection("Auth 2 Login Integration Tests")]
 public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
     : IClassFixture<LearnAtHomeWebApplicationFactory>,
         IDisposable

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnAtHomeApi.FunctionalTests.Auth;
 
+[Collection("Auth 1 Register Integration Tests")]
 public class AuthRegisterIntegrationTests(LearnAtHomeWebApplicationFactory factory)
     : IClassFixture<LearnAtHomeWebApplicationFactory>,
         IDisposable
@@ -35,6 +36,32 @@ public class AuthRegisterIntegrationTests(LearnAtHomeWebApplicationFactory facto
                 Assert.Contains(setCookieHeader, c => c.StartsWith("session_token="));
             }
         );
+    }
+
+    /// <summary>
+    /// When I register with a password that doesn't match given regex, API should return 400
+    /// </summary>
+    [Fact]
+    public async Task RegisterWithInvalidPassword_Returns400()
+    {
+        var dto = new AuthRegisterDto
+        {
+            Email = "test@test.com",
+            Username = "TestUser",
+            Password = "Password70*$",
+            PasswordConfirm = "Password70*$",
+        };
+
+        await RegisterUser(dto, HttpStatusCode.OK);
+        dto.Password = "Passrd70*$";
+        dto.PasswordConfirm = "Passrd70*$";
+        await RegisterUser(dto, HttpStatusCode.BadRequest);
+        dto.Password = "PasswordTT*$";
+        dto.PasswordConfirm = "PasswordTT*$";
+        await RegisterUser(dto, HttpStatusCode.BadRequest);
+        dto.Password = "password70*$";
+        dto.PasswordConfirm = "password70*$";
+        await RegisterUser(dto, HttpStatusCode.BadRequest);
     }
 
     /// <summary>
