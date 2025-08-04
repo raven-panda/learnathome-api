@@ -7,11 +7,8 @@ namespace LearnAtHomeApi.FunctionalTests.Auth;
 
 [Collection("Auth 1 Register Integration Tests")]
 public class AuthRegisterIntegrationTests(LearnAtHomeWebApplicationFactory factory)
-    : IClassFixture<LearnAtHomeWebApplicationFactory>,
-        IDisposable
+    : IntegrationTestAbstract(factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
-
     /// <summary>
     /// When I register with valid dto, API should return 200 success with the access_token and refresh_token cookies
     /// </summary>
@@ -105,16 +102,9 @@ public class AuthRegisterIntegrationTests(LearnAtHomeWebApplicationFactory facto
         Action<HttpResponseMessage>? responseAction = null
     )
     {
-        var response = await _client.PostAsJsonAsync("/api/v1/auth/register", dto);
+        var response = await Client.PostAsJsonAsync("/api/v1/auth/register", dto);
         Assert.Equal(expectedStatusCode, response.StatusCode);
 
         responseAction?.Invoke(response);
-    }
-
-    public void Dispose()
-    {
-        using var scope = factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.EnsureDeleted();
     }
 }

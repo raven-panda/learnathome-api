@@ -7,11 +7,8 @@ namespace LearnAtHomeApi.FunctionalTests.Auth;
 
 [Collection("Auth 2 Login Integration Tests")]
 public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
-    : IClassFixture<LearnAtHomeWebApplicationFactory>,
-        IDisposable
+    : IntegrationTestAbstract(factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
-
     private readonly AuthRegisterDto _registerDto = new()
     {
         Email = "test@test.com",
@@ -20,9 +17,9 @@ public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
         PasswordConfirm = "Password70*$",
     };
 
-    private async Task BeforeEachTest()
+    protected override async Task BeforeEachTest()
     {
-        await _client.PostAsJsonAsync("/api/v1/auth/register", _registerDto);
+        await Client.PostAsJsonAsync("/api/v1/auth/register", _registerDto);
     }
 
     /// <summary>
@@ -31,8 +28,6 @@ public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
     [Fact]
     public async Task LoginValid_Returns200AndTokens()
     {
-        await BeforeEachTest();
-
         var loginDto = new AuthLoginDto
         {
             Email = _registerDto.Email,
@@ -56,8 +51,6 @@ public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
     [Fact]
     public async Task LoginInvalidEmail_Returns401()
     {
-        await BeforeEachTest();
-
         var loginDto = new AuthLoginDto
         {
             Email = _registerDto.Email + "_invalidString",
@@ -72,8 +65,6 @@ public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
     [Fact]
     public async Task LoginInvalidPassword_Returns401()
     {
-        await BeforeEachTest();
-
         var loginDto = new AuthLoginDto
         {
             Email = _registerDto.Email,
@@ -88,16 +79,9 @@ public class AuthLoginIntegrationTests(LearnAtHomeWebApplicationFactory factory)
         Action<HttpResponseMessage>? responseAction = null
     )
     {
-        var response = await _client.PostAsJsonAsync("/api/v1/auth/login", dto);
+        var response = await Client.PostAsJsonAsync("/api/v1/auth/login", dto);
         Assert.Equal(expectedStatusCode, response.StatusCode);
 
         responseAction?.Invoke(response);
-    }
-
-    public void Dispose()
-    {
-        using var scope = factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.EnsureDeleted();
     }
 }
