@@ -62,7 +62,7 @@ public class ExceptionHandlingMiddleware(
                 $"{_baseUrl}/docs/errors/security-token-invalid.html"
             ),
             InvalidCredentialsException => (
-                (int)HttpStatusCode.BadRequest,
+                (int)HttpStatusCode.Unauthorized,
                 "Invalid Credentials",
                 $"{_baseUrl}/docs/errors/invalid-credentials.html"
             ),
