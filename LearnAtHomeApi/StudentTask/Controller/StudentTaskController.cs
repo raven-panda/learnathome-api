@@ -18,7 +18,7 @@ public class StudentTaskController(
 ) : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetAllByIdMentor()
+    public IActionResult GetAllById()
     {
         var (userId, _, role) = tokenProvider.ParseUserToken(
             Request.Cookies[configuration["Jwt:RefreshTokenCookieName"]!]!
